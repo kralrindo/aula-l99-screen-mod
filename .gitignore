@@ -1,0 +1,11 @@
+# builds and AULA files never go into the repo
+*.bin
+*.patch
+L99-mod-updater/
+L99-mod-*
+tools/gen/
+tools/icons/
+tools/deck.json
+tools/deck_preview.png
+__pycache__/
+*.pyc
