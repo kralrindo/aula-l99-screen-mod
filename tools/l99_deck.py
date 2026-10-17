@@ -1,4 +1,4 @@
-"""L99 Deck - PC side.  Windows only.
+"""L99 Deck (by Rindobolical) - PC side.  Windows only.
 
 How it works
   * The keyboard can only send numpad and media keys from its screen, so the
@@ -593,7 +593,7 @@ def run(cfg: dict) -> None:
     handle = user32.SetWindowsHookExW(13, hook, None, 0)
     if not handle:
         sys.exit(f"could not install keyboard hook ({ctypes.get_last_error()})")
-    print("L99 Deck is running. Open Deck on the keyboard screen. Close this window to stop.")
+    print("L99 Deck (by Rindobolical) is running. Open Deck on the keyboard screen. Close this window to stop.")
     msg = wintypes.MSG()
     try:
         while user32.GetMessageW(ctypes.byref(msg), None, 0, 0) != 0:

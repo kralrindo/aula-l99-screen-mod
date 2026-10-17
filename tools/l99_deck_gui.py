@@ -1,4 +1,4 @@
-"""L99 Deck editor - pick what each Deck tile does, change icons, send to the keyboard.
+"""L99 Deck (by Rindobolical) editor - pick what each Deck tile does, change icons, send to the keyboard.
 
 Run:  pythonw l99_deck_gui.py      (or double-click "L99 Deck Editor.bat")
 Needs: pip install pillow pyserial icoextract pycaw comtypes
@@ -71,7 +71,7 @@ def lnk_icon(path: str) -> str:
 class DeckEditor:
     def __init__(self, root: tk.Tk):
         self.root = root
-        root.title("L99 Deck")
+        root.title("L99 Deck — by Rindobolical")
         root.resizable(False, False)
         self.cfg = deck.load_config()
         self.cfg["tiles"] = (self.cfg.get("tiles", []) + [{}] * 12)[:12]
@@ -93,8 +93,12 @@ class DeckEditor:
         # --- right: tile editor
         right = ttk.Frame(main)
         right.grid(row=0, column=1, sticky="n")
-        self.title = ttk.Label(right, text="", font=("Segoe UI", 12, "bold"))
-        self.title.grid(row=0, column=0, columnspan=3, sticky="w", pady=(0, 8))
+        head = ttk.Frame(right)
+        head.grid(row=0, column=0, columnspan=3, sticky="w", pady=(0, 8))
+        self.title = ttk.Label(head, text="", font=("Segoe UI", 12, "bold"))
+        self.title.grid(row=0, column=0, sticky="w")
+        self.where = ttk.Label(head, text="", foreground="#777")
+        self.where.grid(row=1, column=0, sticky="w")
 
         ttk.Label(right, text="Label").grid(row=1, column=0, sticky="w")
         self.v_label = tk.StringVar()
@@ -178,6 +182,7 @@ class DeckEditor:
         ttk.Checkbutton(right, text="Start L99 Deck with Windows", variable=self.v_startup,
                         command=self.toggle_startup).grid(row=12, column=0, columnspan=2, sticky="w")
         ttk.Button(right, text="Start L99 Deck now", command=self.start_runner).grid(row=12, column=2, sticky="e")
+        ttk.Label(main, text="L99 Deck · made by Rindobolical", foreground="#999").grid(row=1, column=0, sticky="w", pady=(8, 0))
 
         # Live info page + language of the Deck picture
         ttk.Separator(right).grid(row=13, column=0, columnspan=3, sticky="we", pady=10)
@@ -227,7 +232,7 @@ class DeckEditor:
         self._loading = True
         self.sel = k
         t = self.cfg["tiles"][k]
-        self.title.configure(text=f"Tile {k + 1}")
+        self.update_title()
         self.v_label.set(t.get("label", ""))
         self.v_type.set(tile_type(t))
         self.v_run.set(t.get("run", ""))
@@ -240,6 +245,13 @@ class DeckEditor:
         self._loading = False
         self.show_type_frame()
 
+    def update_title(self):
+        """Header above the editor: which tile is selected and where it sits on the screen."""
+        k = self.sel
+        name = self.v_label.get().strip() if hasattr(self, "v_label") else ""
+        self.title.configure(text=f"Editing: {name or 'empty tile'}")
+        self.where.configure(text=f"tile {k + 1} of 12 — row {k // 3 + 1}, column {k % 3 + 1} on the screen")
+
     def show_type_frame(self):
         frames = {"Program": self.f_prog, "Website": self.f_url, "Shortcut keys": self.f_keys,
                   "Media / Microphone": self.f_media}
@@ -249,6 +261,7 @@ class DeckEditor:
             frames[self.v_type.get()].grid()
 
     def on_change(self):
+        self.update_title()
         if self._loading:
             return
         self.show_type_frame()
