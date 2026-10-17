@@ -45,7 +45,7 @@ The home screen now has two new icons in the last row: **Deck** and **Game**.
 
 ## 3. Set up the Deck on your PC
 
-1. Double-click **`Deck Editor.bat`**. The first time, it installs the Python packages it needs.
+1. Double-click **`L99 Deck Editor.bat`**. The first time, it installs the Python packages it needs.
 2. Click a tile on the virtual screen and choose what it does: **Program** (pick from the Start menu or browse to an .exe/.lnk), **Website**, **Shortcut keys** or **Media**. The program's icon is used automatically, or pick your own.
 3. Press **Save & send to keyboard**. This draws your tiles and sends the picture to the screen over USB. The screen freezes for a few seconds while it writes.
 4. Tick **Start L99 Deck with Windows**, or press **Start L99 Deck now**.
@@ -101,7 +101,7 @@ All the details (file format, widget layouts, serial commands, firmware addresse
 | | |
 | --- | --- |
 | `install.bat` / `install.py` | builds `L99-mod-updater` from AULA's download |
-| `Deck Editor.bat` | Deck editor (tiles, icons, city, send to keyboard) |
+| `L99 Deck Editor.bat` | Deck editor (tiles, icons, city, send to keyboard) |
 | `run-deck.bat` | runs the Deck program in a console window, handy for seeing errors |
 | `tools/build_l99.py` | the UI file builder |
 | `tools/l99_deck.py`, `l99_deck_gui.py`, `l99_live.py` | Deck program, editor, Live page |
