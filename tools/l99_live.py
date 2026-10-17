@@ -4,6 +4,7 @@ Runs inside the Deck runner (l99_deck.py), sharing its USB serial link:
   * While the "Canlı Bilgi / Live Info" page is open it fills 8 text lines
     (screen variables 0x1000-0x1070) every 2 seconds: weather, now playing,
     system load, date/time.
+  * On Settings > About it shows your own version text (deck.json "version_text").
   * Every 30 s it re-applies the language chosen in Settings > Language. The
     screen remembers the choice but only switches when it is written again,
     so after a power cycle it would otherwise start in the first language.
@@ -31,6 +32,8 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
 LIVE_PAGE = 31
+ABOUT_PAGE, VERSION_VAR = 15, 0x008A    # Settings > About: the keyboard writes its firmware version here at boot
+DEFAULT_VERSION_TEXT = None               # deck.json "version_text" overrides; None = leave it alone
 LANG_REG = 0x203F
 FIRST_LANGUAGE = "en"          # language 0 in the built UI image (build_l99.py --first)
 VARS = [0x1000, 0x1010, 0x1020, 0x1030, 0x1040, 0x1050, 0x1060, 0x1070]
@@ -248,7 +251,11 @@ class LiveInfo:
                 self.link.write(LANG_REG, bytes([0, v & 1]))           # make the screen switch to it
                 langs = [FIRST_LANGUAGE, "en" if FIRST_LANGUAGE == "tr" else "tr"]
                 self.lang = langs[v & 1]
-        if self.link.page() != LIVE_PAGE:
+        page = self.link.page()
+        text = self.get_cfg().get("version_text", DEFAULT_VERSION_TEXT)
+        if page == ABOUT_PAGE and text:           # every tick, in case the keyboard writes its own again
+            self.link.write(VERSION_VAR, text.encode("ascii", "replace")[:20].ljust(20, b"\0"))
+        if page != LIVE_PAGE:
             self.sent.clear()                     # repaint everything next time the page opens
             return
         for var, n, text in zip(VARS, MAXLEN, self.lines()):

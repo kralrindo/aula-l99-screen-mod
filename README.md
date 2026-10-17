@@ -80,6 +80,8 @@ On the Deck page, press **Live** (top right). While the page is open, the runnin
 
 The screen's fonts only have plain ASCII letters, so accents are dropped (é → e).
 
+Bonus: `"version_text": "V1.04-MyBuild"` in `tools\deck.json` replaces the version shown under **Settings → About** while the Deck program runs. The keyboard writes its own firmware version there at boot.
+
 ## Going back
 
 Flash AULA's original updater the same way: download mode, then run AULA's `L99 keyboard Screen reset firmware ... .exe`. That restores the stock screen.
